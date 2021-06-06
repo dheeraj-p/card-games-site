@@ -1,0 +1,36 @@
+body {
+  background: linear-gradient(#2f6d9b, #afcffe) fixed;
+  background-repeat: no-repeat;
+  margin: 0;
+  padding: 8px;
+  font-family: 'Courier New', Courier, monospace;
+  color: whitesmoke;
+
+}
+
+.row {
+  display: flex;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.grid {
+  display: grid;
+}
+
+.m-top-medium {
+  margin-top: 40px;
+}
+
+.title {
+  font-weight: 600;
+}
