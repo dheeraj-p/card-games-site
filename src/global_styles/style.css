@@ -5,26 +5,6 @@ body {
   padding: 8px;
   font-family: 'Courier New', Courier, monospace;
   color: whitesmoke;
-
-}
-
-.row {
-  display: flex;
-}
-
-.column {
-  display: flex;
-  flex-direction: column;
-}
-
-.center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.grid {
-  display: grid;
 }
 
 .m-top-medium {

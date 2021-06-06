@@ -1,29 +1,30 @@
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
-import { useResizeDetector } from 'react-resize-detector';
+import Center from '../Center/Center';
 import styles from './GameList.module.css';
 
 function GameItem({ gameId, name, icon }) {
   return (
-    <Link href={`/${gameId}`}>
+    <Link href={`/games/${gameId}`}>
       <div className={styles['game-card']}>
-        <div className="center">{name}</div>
-        <div className="center">
-          <img className={styles.icon} src={`/icons/${icon}`} />
-        </div>
+        <Center>{name}</Center>
+        <Center>
+          <img className={styles.icon} src={`/assets/icons/${icon}`} />
+        </Center>
       </div>
     </Link>
   );
 }
 
-function GameList() {
+function GameList({ games }) {
   return (
-    <div className="column">
-      <span className={`center title ${styles.title}`}>Available Games</span>
+    <div>
+      <Center className={`title ${styles.title}`}>Available Games</Center>
       <div className={styles.games}>
-        <GameItem gameId="solitaire" name="Solitaire" icon="solitaire.png" />
+        {games.map(({ gameId, name, icon }) => (
+          <GameItem key={gameId} gameId={gameId} name={name} icon={icon} />
+        ))}
       </div>
-      <span className="center">More games to be added soon!</span>
+      <Center>More games to be added soon!</Center>
     </div>
   );
 }

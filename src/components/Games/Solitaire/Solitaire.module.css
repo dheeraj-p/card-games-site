@@ -1,0 +1,39 @@
+.row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px;
+}
+
+.pile {
+  width: 12%;
+}
+
+.pile.empty {
+  background-color: rgb(2, 108, 23);
+}
+
+.pile.tableau {
+  margin-top: 80px;
+}
+
+.pile.tableau > .card {
+  margin-top: -80px;
+}
+
+.card {
+  width: 100%;
+  height: 120px;
+  border-radius: 8px;
+  font-size: 7rem;
+  box-sizing: border-box;
+}
+
+.card > .image {
+  width: 100%;
+  height: 100%;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
