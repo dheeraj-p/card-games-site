@@ -2,16 +2,16 @@ import styles from './Solitaire.module.css';
 import { cardToString } from './core/logic';
 
 function FacedDownCard() {
-  const facedDownCard = `/assets/solitaire/red_back-min.png`;
+  const facedDownCard = `/assets/cards/red_back-min.png`;
   return (
     <div className={styles.card}>
-      <img src={facedDownCard} className={styles.image} />
+      <img src={facedDownCard} className={styles.image} draggable={false} />
     </div>
   );
 }
 
 function Card({ card }) {
-  const imageSrc = `/assets/solitaire/${cardToString(card)}-min.png`;
+  const imageSrc = `/assets/cards/${cardToString(card)}-min.png`;
   return (
     <div className={styles.card}>
       <img src={imageSrc} className={styles.image} />

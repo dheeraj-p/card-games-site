@@ -16,7 +16,7 @@
   margin-top: 80px;
 }
 
-.pile.tableau > .card {
+.pile.tableau > .card,.card-group {
   margin-top: -80px;
 }
 
@@ -36,4 +36,3 @@
 .invisible {
   visibility: hidden;
 }
-

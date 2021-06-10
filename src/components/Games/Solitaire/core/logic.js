@@ -32,6 +32,7 @@ function generateTableau(cards) {
 
   return _.chain(_.range(0, 7))
     .map(index => _.slice(cards, sigma(index), sigma(index + 1)))
+    .map(pile => ({ up: _.takeRight(pile, 3), down: _.dropRight(pile, 3) }))
     .value();
 }
 
@@ -43,6 +44,40 @@ function cardToString(card) {
   }
 
   return cardNumberToString + card.suit.name[0];
+}
+
+function findCardInTableau(tableau, cardStr) {
+  for (let pileNumber = 0; pileNumber < tableau.length; pileNumber++) {
+    const currentPile = _.map(tableau[pileNumber].up, cardToString);
+    const cardIndex = _.indexOf(currentPile, cardStr);
+
+    if (cardIndex > -1) {
+      return { pileNumber, cardIndex };
+    }
+  }
+  return { pileNumber: -1, cardIndex: -1 };
+}
+
+function moveCard(gameState, cardStr, targetTableuPileNum) {
+  const { tableau } = gameState;
+  const { pileNumber, cardIndex } = findCardInTableau(tableau, cardStr);
+  const sourcePile = tableau[pileNumber].up;
+  const targetPile = tableau[targetTableuPileNum].up;
+  const updatedTargetPile = [...targetPile, ..._.slice(sourcePile, cardIndex)];
+  const updatedSourcePile = _.slice(sourcePile, 0, cardIndex);
+  const updatedTableu = tableau.slice();
+  updatedTableu[pileNumber] = {
+    up: updatedSourcePile,
+    down: tableau[pileNumber].down
+  };
+  updatedTableu[targetTableuPileNum] = {
+    up: updatedTargetPile,
+    down: tableau[targetTableuPileNum].down
+  };
+
+  console.log({ ...gameState, tableau: updatedTableu });
+
+  return { ...gameState, tableau: updatedTableu };
 }
 
 function initialGameState() {
@@ -62,6 +97,7 @@ function initialGameState() {
 export {
   initialGameState,
   cardToString,
+  moveCard,
   SUIT_CLUBS,
   SUIT_DIMAONDS,
   SUIT_HEARTS,
