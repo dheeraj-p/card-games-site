@@ -3,10 +3,13 @@
   "version": "1.0.0",
   "description": "A website for card games",
   "main": "index.js",
+  "cacheDirectories": [
+    ".next/cache"
+  ],
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start -p $PORT"
   },
   "author": "Dheeraj Pundir",
   "license": "ISC",
