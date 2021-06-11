@@ -1,7 +1,8 @@
 import { DndContext, useDraggable, useDroppable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
 import _ from 'lodash';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { cardImages } from '../../../data/cardImages';
 import Card, { FacedDownCard } from './Card';
 import {
   cardToString,
@@ -14,6 +15,8 @@ import {
   SUIT_HEARTS,
   SUIT_SPADES
 } from './core/logic';
+
+import Center from '../../Center/Center';
 import styles from './Solitaire.module.css';
 
 const SOURCE_TYPE = {
@@ -152,8 +155,32 @@ function isMovingFromWasteToTableau(sourceType, targetType) {
   return targetType == TARGET_TYPE.TABLEAU && sourceType == SOURCE_TYPE.WASTE;
 }
 
+function cacheImages(imageSources, onLoaded, onError) {
+  const promises = _.map(imageSources, imageSrc => {
+    return new Promise((resolve, reject) => {
+      const image = new Image();
+      image.src = imageSrc;
+      image.onload = resolve;
+      image.onerror = reject;
+      window[imageSrc] = image;
+    });
+  });
+
+  Promise.all(promises).then(onLoaded).catch(onError);
+}
+
 function Solitaire() {
   const [gameState, setGameState] = useState(initialGameState());
+  const [areImagesReady, setImagesReady] = useState(false);
+
+  useEffect(() => {
+    cacheImages(
+      cardImages,
+      () => setImagesReady(true),
+      () => {}
+    );
+  }, []);
+
   const { stock, waste, foundations, tableau } = gameState;
 
   const onDragEnd = ({ active, over }) => {
@@ -181,7 +208,7 @@ function Solitaire() {
 
   const onClickStock = () => setGameState(popFromStock(gameState));
 
-  return (
+  return areImagesReady ? (
     <DndContext onDragEnd={onDragEnd}>
       <div className={styles.row}>
         <Stock cards={stock} onClick={onClickStock} />
@@ -199,6 +226,8 @@ function Solitaire() {
         ))}
       </div>
     </DndContext>
+  ) : (
+    <Center>Loading Game...</Center>
   );
 }
 
