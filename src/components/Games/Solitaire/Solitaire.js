@@ -90,7 +90,7 @@ function Waste({ cards, shouldFlipThree = false }) {
 
   return (
     <Pile cards={cards}>
-      <div style={style} ref={setNodeRef} {...attributes} {...listeners}>
+      <div class={styles['waste-card']} style={style} ref={setNodeRef} {...attributes} {...listeners}>
         <Card card={cardOnTop} />
       </div>
     </Pile>

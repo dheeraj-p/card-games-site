@@ -22,7 +22,8 @@
   margin-top: -80px;
 }
 
-.card-group {
+.card-group,
+.waste-card {
   touch-action: none;
 }
 
