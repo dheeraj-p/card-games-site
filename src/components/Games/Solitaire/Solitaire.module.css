@@ -10,14 +10,20 @@
 
 .pile.empty {
   background-color: rgb(2, 108, 23);
+  max-height: 120px;
 }
 
 .pile.tableau {
   margin-top: 80px;
 }
 
-.pile.tableau > .card,.card-group {
+.pile.tableau > .card,
+.card-group {
   margin-top: -80px;
+}
+
+.card-group {
+  touch-action: none;
 }
 
 .card {

@@ -13,9 +13,9 @@ import {
 } from './core/logic';
 import styles from './Solitaire.module.css';
 
-function EmptyPile() {
-  return <div className={`${styles.pile} ${styles.empty}`} />;
-}
+const EmptyPile = React.forwardRef((props, ref) => {
+  return <div ref={ref} className={`${styles.pile} ${styles.empty}`} />;
+});
 
 function InvisiblePile() {
   return <div className={`${styles.pile} ${styles.invisible}`} />;
@@ -24,7 +24,7 @@ function InvisiblePile() {
 const Pile = React.forwardRef(
   ({ cards, className, children, attributes }, ref) => {
     if (_.isEmpty(cards)) {
-      return EmptyPile();
+      return <EmptyPile ref={ref} />;
     }
 
     return (
