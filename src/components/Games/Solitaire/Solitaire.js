@@ -18,6 +18,7 @@ import {
 
 import Center from '../../Center/Center';
 import styles from './Solitaire.module.css';
+import LoadingBox from '../../LoadingBox/LoadingBox';
 
 const SOURCE_TYPE = {
   TABLEAU: 'TABLEAU',
@@ -227,7 +228,7 @@ function Solitaire() {
       </div>
     </DndContext>
   ) : (
-    <Center>Loading Game...</Center>
+    <LoadingBox />
   );
 }
 
