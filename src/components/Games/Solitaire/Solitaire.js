@@ -10,6 +10,7 @@ import {
   moveWithinTableau,
   moveFromWasteToTableau,
   moveFromTableauToFoundation,
+  moveFromWasteToFoundation,
   popFromStock,
   SUIT_HEARTS,
   SUIT_SPADES,
@@ -168,6 +169,12 @@ function isMovingFromTableauToFoundation(sourceType, targetType) {
   );
 }
 
+function isMovingFromWasteToFoundation(sourceType, targetType) {
+  return (
+    targetType == TARGET_TYPE.FOUNDATION && sourceType == SOURCE_TYPE.WASTE
+  );
+}
+
 function cacheImages(imageSources, onLoaded, onError) {
   const promises = _.map(imageSources, imageSrc => {
     return new Promise((resolve, reject) => {
@@ -227,6 +234,10 @@ function Solitaire() {
       );
     }
 
+    if (isMovingFromWasteToFoundation(sourceType, targetType)) {
+      const { foundationTarget } = over.data.current;
+      newGameState = moveFromWasteToFoundation(gameState, foundationTarget);
+    }
     setGameState(newGameState);
   };
 

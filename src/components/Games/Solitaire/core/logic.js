@@ -66,7 +66,7 @@ function isCardAKing(card) {
   return card.number == 13;
 }
 
-function isValidToMoveToTableau(card, targetFacedUpCards) {
+function isValidMoveToTableau(card, targetFacedUpCards) {
   if (_.isEmpty(targetFacedUpCards)) {
     return isCardAKing(card);
   }
@@ -111,7 +111,7 @@ function moveWithinTableau(gameState, cardStr, targetPileIndex) {
   const targetPile = tableau[targetPileIndex];
   const targetFacedUpCards = targetPile.up;
 
-  if (!isValidToMoveToTableau(card, targetFacedUpCards)) {
+  if (!isValidMoveToTableau(card, targetFacedUpCards)) {
     return gameState;
   }
   const updatedTableu = tableau.slice();
@@ -127,7 +127,7 @@ function moveFromWasteToTableau(gameState, targetPileIndex) {
   const cardOnTop = waste[0];
   const targetPile = tableau[targetPileIndex];
 
-  if (!isValidToMoveToTableau(cardOnTop, targetPile.up)) {
+  if (!isValidMoveToTableau(cardOnTop, targetPile.up)) {
     return gameState;
   }
 
@@ -188,6 +188,29 @@ function moveFromTableauToFoundation(gameState, cardStr, foundationTarget) {
   };
 }
 
+function moveFromWasteToFoundation(gameState, foundationTarget) {
+  const { waste, foundations } = gameState;
+  const cardOnTop = waste[0];
+  const foundationSuitName = _.lowerCase(foundationTarget);
+  const foundation = foundations[foundationSuitName];
+
+  if (!canBeMovedToFoundation(cardOnTop, foundation, foundationSuitName)) {
+    return gameState;
+  }
+
+  const updatedFoundations = _.update(
+    foundations,
+    foundationSuitName,
+    current => [cardOnTop, ...current]
+  );
+
+  return {
+    ...gameState,
+    foundations: updatedFoundations,
+    waste: _.drop(waste, 1)
+  };
+}
+
 function initialGameState() {
   const deck = generateDeck();
   const stock = _.take(deck, 24);
@@ -220,6 +243,7 @@ export {
   moveWithinTableau,
   moveFromWasteToTableau,
   moveFromTableauToFoundation,
+  moveFromWasteToFoundation,
   popFromStock,
   SUIT_CLUBS,
   SUIT_DIMAONDS,
