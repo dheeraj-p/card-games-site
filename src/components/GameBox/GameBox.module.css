@@ -1,6 +1,7 @@
 .container {
   background: #009a38;
-  height: 640px;
+  position: relative;
+  min-height: 640px;
   max-width: 768px;
   width: 768px;
   border-radius: 8px;
