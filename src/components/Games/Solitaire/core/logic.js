@@ -6,7 +6,7 @@ const COLOR_BLACK = 'BLACK';
 const SUIT_SPADES = { name: 'SPADES', color: COLOR_BLACK };
 const SUIT_HEARTS = { name: 'HEARTS', color: COLOR_RED };
 const SUIT_CLUBS = { name: 'CLUBS', color: COLOR_BLACK };
-const SUIT_DIMAONDS = { name: 'DIMAONDS', color: COLOR_RED };
+const SUIT_DIMAONDS = { name: 'DIAMONDS', color: COLOR_RED };
 
 function newCard(number, suit) {
   return { number, suit };
@@ -66,7 +66,7 @@ function isCardAKing(card) {
   return card.number == 13;
 }
 
-function isValidMove(card, targetFacedUpCards) {
+function isValidToMoveToTableau(card, targetFacedUpCards) {
   if (_.isEmpty(targetFacedUpCards)) {
     return isCardAKing(card);
   }
@@ -74,7 +74,8 @@ function isValidMove(card, targetFacedUpCards) {
   const cardOnTop = _.last(targetFacedUpCards);
 
   return (
-    cardOnTop.suit.color != card.suit.color && card.number < cardOnTop.number
+    cardOnTop.suit.color != card.suit.color &&
+    card.number + 1 == cardOnTop.number
   );
 }
 
@@ -106,10 +107,11 @@ function moveWithinTableau(gameState, cardStr, targetPileIndex) {
   const { pileIndex, cardIndex } = findCardInTableau(tableau, cardStr);
   const sourcePile = tableau[pileIndex];
   const sourceFacedUpCards = sourcePile.up;
+  const card = sourceFacedUpCards[cardIndex];
   const targetPile = tableau[targetPileIndex];
   const targetFacedUpCards = targetPile.up;
 
-  if (!isValidMove(sourceFacedUpCards[cardIndex], targetFacedUpCards)) {
+  if (!isValidToMoveToTableau(card, targetFacedUpCards)) {
     return gameState;
   }
   const updatedTableu = tableau.slice();
@@ -125,7 +127,7 @@ function moveFromWasteToTableau(gameState, targetPileIndex) {
   const cardOnTop = waste[0];
   const targetPile = tableau[targetPileIndex];
 
-  if (!isValidMove(cardOnTop, targetPile.up)) {
+  if (!isValidToMoveToTableau(cardOnTop, targetPile.up)) {
     return gameState;
   }
 
@@ -133,6 +135,57 @@ function moveFromWasteToTableau(gameState, targetPileIndex) {
   updatedTableu[targetPileIndex] = updateTargetPile(targetPile, [cardOnTop]);
 
   return { ...gameState, tableau: updatedTableu, waste: _.drop(waste, 1) };
+}
+
+function areFromSameSuit(card, anotherCard) {
+  return _.isEqual(card.suit, anotherCard.suit);
+}
+
+function canBeMovedToFoundation(card, foundation, foundationSuitName) {
+  if (_.isEmpty(foundation)) {
+    return (
+      _.lowerCase(card.suit.name) == foundationSuitName && card.number == 1
+    );
+  }
+
+  const cardOnTop = _.first(foundation);
+  return (
+    areFromSameSuit(card, cardOnTop) && card.number == cardOnTop.number + 1
+  );
+}
+
+function moveFromTableauToFoundation(gameState, cardStr, foundationTarget) {
+  const { tableau, foundations } = gameState;
+  const foundationSuitName = _.lowerCase(foundationTarget);
+  const { pileIndex, cardIndex } = findCardInTableau(tableau, cardStr);
+  const sourcePile = tableau[pileIndex];
+  const card = sourcePile.up[cardIndex];
+  const foundation = foundations[foundationSuitName];
+  const isLastCardOnPile = cardIndex == sourcePile.up.length - 1;
+
+  const isMovePossible = !(
+    isLastCardOnPile &&
+    canBeMovedToFoundation(card, foundation, foundationSuitName)
+  );
+
+  if (isMovePossible) {
+    return gameState;
+  }
+
+  const updatedFoundations = _.update(
+    foundations,
+    foundationSuitName,
+    current => [card, ...current]
+  );
+
+  const updatedTableau = tableau.slice();
+  updatedTableau[pileIndex] = updateSourcePile(sourcePile, cardIndex);
+
+  return {
+    ...gameState,
+    foundations: updatedFoundations,
+    tableau: updatedTableau
+  };
 }
 
 function initialGameState() {
@@ -166,6 +219,7 @@ export {
   cardToString,
   moveWithinTableau,
   moveFromWasteToTableau,
+  moveFromTableauToFoundation,
   popFromStock,
   SUIT_CLUBS,
   SUIT_DIMAONDS,

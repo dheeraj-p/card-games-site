@@ -9,14 +9,14 @@ import {
   initialGameState,
   moveWithinTableau,
   moveFromWasteToTableau,
+  moveFromTableauToFoundation,
   popFromStock,
-  SUIT_CLUBS,
-  SUIT_DIMAONDS,
   SUIT_HEARTS,
-  SUIT_SPADES
+  SUIT_SPADES,
+  SUIT_DIMAONDS,
+  SUIT_CLUBS
 } from './core/logic';
 
-import Center from '../../Center/Center';
 import styles from './Solitaire.module.css';
 import LoadingBox from '../../LoadingBox/LoadingBox';
 
@@ -89,17 +89,23 @@ function Waste({ cards, shouldFlipThree = false }) {
 }
 
 function Foundation({ cards, suit }) {
+  const { setNodeRef } = useDroppable({
+    id: `foundation-pile-${suit.name}`,
+    data: { targetType: TARGET_TYPE.FOUNDATION, foundationTarget: suit.name }
+  });
+
   return (
-    <Pile cards={cards}>
+    <Pile cards={cards} ref={setNodeRef}>
       <Card card={cards[0]} />
     </Pile>
   );
 }
 
 function CardGroup({ card, otherCardGroup }) {
+  const cardStr = cardToString(card);
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id: `card-${cardToString(card)}`,
-    data: { sourceType: SOURCE_TYPE.TABLEAU }
+    id: `card-${cardStr}`,
+    data: { sourceType: SOURCE_TYPE.TABLEAU, cardStr }
   });
 
   const style = {
@@ -123,7 +129,7 @@ function CardGroup({ card, otherCardGroup }) {
 function TableauPile({ pile, id }) {
   const { setNodeRef } = useDroppable({
     id: `tableau-pile-${id}`,
-    data: { targetType: TARGET_TYPE.TABLEAU }
+    data: { targetType: TARGET_TYPE.TABLEAU, targetPileIndex: id }
   });
 
   const faceUpCardsView = _.reduceRight(
@@ -154,6 +160,12 @@ function isMovingWithinTableu(sourceType, targetType) {
 
 function isMovingFromWasteToTableau(sourceType, targetType) {
   return targetType == TARGET_TYPE.TABLEAU && sourceType == SOURCE_TYPE.WASTE;
+}
+
+function isMovingFromTableauToFoundation(sourceType, targetType) {
+  return (
+    targetType == TARGET_TYPE.FOUNDATION && sourceType == SOURCE_TYPE.TABLEAU
+  );
 }
 
 function cacheImages(imageSources, onLoaded, onError) {
@@ -194,14 +206,25 @@ function Solitaire() {
     let newGameState = gameState;
 
     if (isMovingWithinTableu(sourceType, targetType)) {
-      const cardStr = _.split(active.id, 'card-')[1];
-      const targetPileIndex = parseInt(_.split(over.id, 'tableau-pile-')[1]);
+      const { cardStr } = active.data.current;
+      const { targetPileIndex } = over.data.current;
       newGameState = moveWithinTableau(gameState, cardStr, targetPileIndex);
     }
 
     if (isMovingFromWasteToTableau(sourceType, targetType)) {
-      const targetPileIndex = parseInt(_.split(over.id, 'tableau-pile-')[1]);
+      const { targetPileIndex } = over.data.current;
       newGameState = moveFromWasteToTableau(gameState, targetPileIndex);
+    }
+
+    if (isMovingFromTableauToFoundation(sourceType, targetType)) {
+      const { cardStr } = active.data.current;
+      const { foundationTarget } = over.data.current;
+
+      newGameState = moveFromTableauToFoundation(
+        gameState,
+        cardStr,
+        foundationTarget
+      );
     }
 
     setGameState(newGameState);
