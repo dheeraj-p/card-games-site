@@ -6,15 +6,34 @@ import Card, { FacedDownCard } from './Card';
 import {
   cardToString,
   initialGameState,
-  moveCard,
+  moveWithinTableau,
+  moveFromWasteToTableau,
+  popFromStock,
   SUIT_CLUBS,
   SUIT_DIMAONDS,
+  SUIT_HEARTS,
   SUIT_SPADES
 } from './core/logic';
 import styles from './Solitaire.module.css';
 
-const EmptyPile = React.forwardRef((props, ref) => {
-  return <div ref={ref} className={`${styles.pile} ${styles.empty}`} />;
+const SOURCE_TYPE = {
+  TABLEAU: 'TABLEAU',
+  WASTE: 'WASTE_PILE'
+};
+
+const TARGET_TYPE = {
+  TABLEAU: 'TABLEAU',
+  FOUNDATION: 'FOUNDATION'
+};
+
+const EmptyPile = React.forwardRef(({ attributes }, ref) => {
+  return (
+    <div
+      ref={ref}
+      className={`${styles.pile} ${styles.empty}`}
+      {...attributes}
+    />
+  );
 });
 
 function InvisiblePile() {
@@ -24,7 +43,7 @@ function InvisiblePile() {
 const Pile = React.forwardRef(
   ({ cards, className, children, attributes }, ref) => {
     if (_.isEmpty(cards)) {
-      return <EmptyPile ref={ref} />;
+      return <EmptyPile ref={ref} attributes={attributes} />;
     }
 
     return (
@@ -35,18 +54,32 @@ const Pile = React.forwardRef(
   }
 );
 
-function Stock({ cards }) {
+function Stock({ cards, onClick }) {
+  const attributes = { onClick };
+
   return (
-    <Pile cards={cards}>
+    <Pile cards={cards} attributes={attributes}>
       <FacedDownCard />
     </Pile>
   );
 }
 
 function Waste({ cards, shouldFlipThree = false }) {
+  const cardOnTop = cards[0];
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: `card-${cardToString(cardOnTop)}`,
+    data: { sourceType: SOURCE_TYPE.WASTE }
+  });
+
+  const style = {
+    transform: CSS.Translate.toString(transform)
+  };
+
   return (
     <Pile cards={cards}>
-      <Card card={cards[0]} />
+      <div style={style} ref={setNodeRef} {...attributes} {...listeners}>
+        <Card card={cardOnTop} />
+      </div>
     </Pile>
   );
 }
@@ -60,10 +93,10 @@ function Foundation({ cards, suit }) {
 }
 
 function CardGroup({ card, otherCardGroup }) {
-  const { attributes, listeners, setNodeRef, transform, isDragging } =
-    useDraggable({
-      id: `card-group-${cardToString(card)}`
-    });
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: `card-${cardToString(card)}`,
+    data: { sourceType: SOURCE_TYPE.TABLEAU }
+  });
 
   const style = {
     transform: CSS.Translate.toString(transform)
@@ -84,7 +117,10 @@ function CardGroup({ card, otherCardGroup }) {
 }
 
 function TableauPile({ pile, id }) {
-  const { setNodeRef } = useDroppable({ id: `tableau-pile-${id}` });
+  const { setNodeRef } = useDroppable({
+    id: `tableau-pile-${id}`,
+    data: { targetType: TARGET_TYPE.TABLEAU }
+  });
 
   const faceUpCardsView = _.reduceRight(
     pile.up,
@@ -108,24 +144,50 @@ function TableauPile({ pile, id }) {
   );
 }
 
+function isMovingWithinTableu(sourceType, targetType) {
+  return targetType == TARGET_TYPE.TABLEAU && sourceType == SOURCE_TYPE.TABLEAU;
+}
+
+function isMovingFromWasteToTableau(sourceType, targetType) {
+  return targetType == TARGET_TYPE.TABLEAU && sourceType == SOURCE_TYPE.WASTE;
+}
+
 function Solitaire() {
   const [gameState, setGameState] = useState(initialGameState());
   const { stock, waste, foundations, tableau } = gameState;
 
   const onDragEnd = ({ active, over }) => {
-    const cardStr = _.split(active.id, 'card-group-')[1];
-    const targetPileNumber = parseInt(_.split(over.id, 'tableau-pile-')[1]);
-    const newGameState = moveCard(gameState, cardStr, targetPileNumber);
+    if (_.isNil(active) || _.isNil(over)) {
+      return;
+    }
+
+    const { sourceType } = active.data.current;
+    const { targetType } = over.data.current;
+    let newGameState = gameState;
+
+    if (isMovingWithinTableu(sourceType, targetType)) {
+      const cardStr = _.split(active.id, 'card-')[1];
+      const targetPileIndex = parseInt(_.split(over.id, 'tableau-pile-')[1]);
+      newGameState = moveWithinTableau(gameState, cardStr, targetPileIndex);
+    }
+
+    if (isMovingFromWasteToTableau(sourceType, targetType)) {
+      const targetPileIndex = parseInt(_.split(over.id, 'tableau-pile-')[1]);
+      newGameState = moveFromWasteToTableau(gameState, targetPileIndex);
+    }
+
     setGameState(newGameState);
   };
+
+  const onClickStock = () => setGameState(popFromStock(gameState));
 
   return (
     <DndContext onDragEnd={onDragEnd}>
       <div className={styles.row}>
-        <Stock cards={stock} />
+        <Stock cards={stock} onClick={onClickStock} />
         <Waste cards={waste} />
         <InvisiblePile />
-        <Foundation cards={foundations.hearts} suit={SUIT_CLUBS} />
+        <Foundation cards={foundations.hearts} suit={SUIT_HEARTS} />
         <Foundation cards={foundations.spades} suit={SUIT_SPADES} />
         <Foundation cards={foundations.diamonds} suit={SUIT_DIMAONDS} />
         <Foundation cards={foundations.clubs} suit={SUIT_CLUBS} />

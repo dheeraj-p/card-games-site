@@ -37,6 +37,10 @@ function generateTableau(cards) {
 }
 
 function cardToString(card) {
+  if (_.isNil(card)) {
+    return 'invalid-card';
+  }
+
   const cardNumbersMap = { 1: 'A', 13: 'K', 12: 'Q', 11: 'J' };
   let cardNumberToString = cardNumbersMap[card.number];
   if (!cardNumberToString) {
@@ -97,7 +101,7 @@ function updateTargetPile(targetPile, cardsToAdd) {
   return { up: [...targetPile.up, ...cardsToAdd], down: targetPile.down };
 }
 
-function moveCard(gameState, cardStr, targetPileIndex) {
+function moveWithinTableau(gameState, cardStr, targetPileIndex) {
   const { tableau } = gameState;
   const { pileIndex, cardIndex } = findCardInTableau(tableau, cardStr);
   const sourcePile = tableau[pileIndex];
@@ -116,6 +120,21 @@ function moveCard(gameState, cardStr, targetPileIndex) {
   return { ...gameState, tableau: updatedTableu };
 }
 
+function moveFromWasteToTableau(gameState, targetPileIndex) {
+  const { tableau, waste } = gameState;
+  const cardOnTop = waste[0];
+  const targetPile = tableau[targetPileIndex];
+
+  if (!isValidMove(cardOnTop, targetPile.up)) {
+    return gameState;
+  }
+
+  const updatedTableu = tableau.slice();
+  updatedTableu[targetPileIndex] = updateTargetPile(targetPile, [cardOnTop]);
+
+  return { ...gameState, tableau: updatedTableu, waste: _.drop(waste, 1) };
+}
+
 function initialGameState() {
   const deck = generateDeck();
   const stock = _.take(deck, 24);
@@ -130,10 +149,24 @@ function initialGameState() {
   return { stock, waste, foundations, tableau };
 }
 
+function popFromStock(gameState) {
+  const { stock, waste } = gameState;
+  if (_.isEmpty(stock)) {
+    return { ...gameState, stock: waste, waste: [] };
+  }
+
+  const updatedWaste = [_.last(stock), ...waste];
+  const updatedStock = _.dropRight(stock, 1);
+
+  return { ...gameState, stock: updatedStock, waste: updatedWaste };
+}
+
 export {
   initialGameState,
   cardToString,
-  moveCard,
+  moveWithinTableau,
+  moveFromWasteToTableau,
+  popFromStock,
   SUIT_CLUBS,
   SUIT_DIMAONDS,
   SUIT_HEARTS,
