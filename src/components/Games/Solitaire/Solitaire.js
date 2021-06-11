@@ -46,16 +46,24 @@ function InvisiblePile() {
 }
 
 const Pile = React.forwardRef(
-  ({ cards, className, children, attributes }, ref) => {
-    if (_.isEmpty(cards)) {
+  ({ cards, onEmpty, className, children, attributes }, ref) => {
+    if (!_.isEmpty(cards)) {
+      return (
+        <div
+          ref={ref}
+          className={`${styles.pile} ${className}`}
+          {...attributes}
+        >
+          {children}
+        </div>
+      );
+    }
+
+    if (_.isNil(onEmpty)) {
       return <EmptyPile ref={ref} attributes={attributes} />;
     }
 
-    return (
-      <div ref={ref} className={`${styles.pile} ${className}`} {...attributes}>
-        {children}
-      </div>
-    );
+    return onEmpty();
   }
 );
 
@@ -95,8 +103,18 @@ function Foundation({ cards, suit }) {
     data: { targetType: TARGET_TYPE.FOUNDATION, foundationTarget: suit.name }
   });
 
+  const iconSrc = `/assets/icons/${_.lowerCase(suit.name)}_icon.png`;
+
+  const onEmptyRender = () => {
+    return (
+      <div ref={setNodeRef} className={`${styles.pile} ${styles.empty} ${styles.foundation}`}>
+        <img className={styles['foundation-icon']} src={iconSrc} />
+      </div>
+    );
+  };
+
   return (
-    <Pile cards={cards} ref={setNodeRef}>
+    <Pile cards={cards} ref={setNodeRef} onEmpty={onEmptyRender}>
       <Card card={cards[0]} />
     </Pile>
   );

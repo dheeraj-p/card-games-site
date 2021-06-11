@@ -51,5 +51,9 @@ export const cardImages = [
   '/assets/cards/QD-min.png',
   '/assets/cards/QH-min.png',
   '/assets/cards/QS-min.png',
-  '/assets/cards/red_back-min.png'
+  '/assets/cards/red_back-min.png',
+  '/assets/icons/hearts_icon.png',
+  '/assets/icons/clubs_icon.png',
+  '/assets/icons/diamonds_icon.png',
+  '/assets/icons/spades_icon.png'
 ];
