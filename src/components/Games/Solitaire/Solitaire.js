@@ -12,7 +12,8 @@ import {
   SUIT_HEARTS,
   SUIT_SPADES,
   SUIT_DIMAONDS,
-  SUIT_CLUBS
+  SUIT_CLUBS,
+  cardToString
 } from './core/logic';
 
 import styles from './Solitaire.module.css';
@@ -36,7 +37,15 @@ function Solitaire() {
   const [areImagesReady, setImagesReady] = useState(false);
 
   const currentState = _.last(gameStates);
-  
+
+  const updateGameState = newGameState => {
+    if (_.isEqual(currentState, newGameState)) {
+      return;
+    }
+
+    setGameStates([...gameStates, newGameState]);
+  };
+
   useEffect(() => {
     cacheImages(
       cardImages,
@@ -83,21 +92,32 @@ function Solitaire() {
       newGameState = moveFromWasteToFoundation(currentState, foundationTarget);
     }
 
-    if (_.isEqual(currentState, newGameState)) {
-      return;
-    }
-
-    setGameStates([...gameStates, newGameState]);
+    updateGameState(newGameState);
   };
 
-  const onClickStock = () =>
-    setGameStates([...gameStates, popFromStock(currentState)]);
+  const onClickStock = () => updateGameState(popFromStock(currentState));
 
   const undoGame = () => {
     if (gameStates.length < 2) {
       return;
     }
     setGameStates(_.dropRight(gameStates, 1));
+  };
+
+  const onTableauDoubleTap = card => {
+    const foundationTarget = _.lowerCase(card.suit.name);
+    const newGameState = moveFromTableauToFoundation(
+      currentState,
+      cardToString(card),
+      foundationTarget
+    );
+
+    updateGameState(newGameState);
+  };
+
+  const onWasteDoubleTap = card => {
+    const foundationTarget = _.lowerCase(card.suit.name);
+    updateGameState(moveFromWasteToFoundation(currentState, foundationTarget));
   };
 
   return areImagesReady ? (
@@ -111,7 +131,7 @@ function Solitaire() {
         </div>
         <div className={styles.row}>
           <Stock cards={stock} onClick={onClickStock} />
-          <Waste cards={waste} />
+          <Waste cards={waste} onDoubleTap={onWasteDoubleTap} />
           <InvisiblePile />
           <Foundation cards={foundations.hearts} suit={SUIT_HEARTS} />
           <Foundation cards={foundations.spades} suit={SUIT_SPADES} />
@@ -119,7 +139,7 @@ function Solitaire() {
           <Foundation cards={foundations.clubs} suit={SUIT_CLUBS} />
         </div>
         <div className="m-top-medium" />
-        <Tableau tableau={tableau} />
+        <Tableau tableau={tableau} onDoubleTap={onTableauDoubleTap} />
       </div>
     </DndContext>
   ) : (

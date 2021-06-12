@@ -198,7 +198,7 @@ function moveFromWasteToFoundation(gameState, foundationTarget) {
     return gameState;
   }
 
-  const updatedFoundations = _.chain(
+  const updatedFoundations = _.update(
     _.clone(foundations),
     foundationSuitName,
     current => [cardOnTop, ...current]

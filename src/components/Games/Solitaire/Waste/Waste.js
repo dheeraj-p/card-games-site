@@ -6,7 +6,7 @@ import { cardToString } from '../core/logic';
 import Pile from '../Pile/Pile';
 import styles from './Waste.module.css';
 
-function Waste({ cards, shouldFlipThree = false }) {
+function Waste({ cards, onDoubleTap, shouldFlipThree = false }) {
   const cardOnTop = cards[0];
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: `card-${cardToString(cardOnTop)}`,
@@ -25,6 +25,7 @@ function Waste({ cards, shouldFlipThree = false }) {
         ref={setNodeRef}
         {...attributes}
         {...listeners}
+        onDoubleClick={() => onDoubleTap(cardOnTop)}
       >
         <Card card={cardOnTop} />
       </div>

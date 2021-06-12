@@ -6,7 +6,7 @@ import { cardToString } from '../core/logic';
 import Pile from '../Pile/Pile';
 import styles from './Tableau.module.css';
 
-function CardGroup({ card, otherCardGroup }) {
+function CardGroup({ card, otherCardGroup, onDoubleTap }) {
   const cardStr = cardToString(card);
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: `card-${cardStr}`,
@@ -17,6 +17,13 @@ function CardGroup({ card, otherCardGroup }) {
     transform: CSS.Translate.toString(transform)
   };
 
+  const cardAttrs = {
+    onDoubleClick: event => {
+      event.preventDefault();
+      onDoubleTap(card);
+    }
+  };
+
   return (
     <div
       className={styles['card-group']}
@@ -25,13 +32,18 @@ function CardGroup({ card, otherCardGroup }) {
       {...attributes}
       {...listeners}
     >
-      <Card className={styles.card} card={card} key={cardToString(card)} />
+      <Card
+        className={styles.card}
+        card={card}
+        key={cardToString(card)}
+        attributes={cardAttrs}
+      />
       {otherCardGroup}
     </div>
   );
 }
 
-function TableauPile({ pile, id }) {
+function TableauPile({ pile, id, onDoubleTap }) {
   const { setNodeRef } = useDroppable({
     id: `tableau-pile-${id}`,
     data: { targetType: TARGET_TYPE.TABLEAU, targetPileIndex: id }
@@ -40,7 +52,13 @@ function TableauPile({ pile, id }) {
   const faceUpCardsView = _.reduceRight(
     pile.up,
     (cardGroup, card) => {
-      return <CardGroup card={card} otherCardGroup={cardGroup} />;
+      return (
+        <CardGroup
+          card={card}
+          otherCardGroup={cardGroup}
+          onDoubleTap={onDoubleTap}
+        />
+      );
     },
     <></>
   );
@@ -59,11 +77,16 @@ function TableauPile({ pile, id }) {
   );
 }
 
-function Tableau({ tableau, className }) {
+function Tableau({ tableau, className, onDoubleTap }) {
   return (
     <div className={`${styles.row} ${className}`}>
       {_.map(tableau, (pile, index) => (
-        <TableauPile pile={pile} key={index} id={index} />
+        <TableauPile
+          pile={pile}
+          key={index}
+          id={index}
+          onDoubleTap={onDoubleTap}
+        />
       ))}
     </div>
   );

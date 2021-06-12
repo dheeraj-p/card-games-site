@@ -10,11 +10,11 @@ function FacedDownCard({ className }) {
   );
 }
 
-function Card({ card, className }) {
+function Card({ card, className, attributes }) {
   const imageSrc = `/assets/cards/${cardToString(card)}-min.png`;
   return (
-    <div className={`${styles.card} ${className}`}>
-      <img src={imageSrc} className={styles.image} />
+    <div className={`${styles.card} ${className}`} {...attributes}>
+      <img src={imageSrc} className={styles.image} draggable={false} />
     </div>
   );
 }
