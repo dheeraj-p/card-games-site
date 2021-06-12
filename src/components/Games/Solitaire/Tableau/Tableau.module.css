@@ -4,10 +4,6 @@
   padding: 8px;
 }
 
-.cards-container {
-  margin-top: -120px;
-}
-
 .tableau-pile .card {
   margin-top: -80px;
 }
@@ -27,29 +23,17 @@
     justify-content: space-between;
     padding: 8px;
   }
-
-  .cards-container {
-    margin-top: -110px;
-  }
 }
 
 @media only screen and (max-width: 640px) {
   .tableau-pile .card {
     margin-top: -70px;
   }
-
-  .cards-container {
-    margin-top: -100px;
-  }
 }
 
 @media only screen and (max-width: 560px) {
   .tableau-pile .card {
     margin-top: -65px;
-  }
-
-  .cards-container {
-    margin-top: -90px;
   }
 }
 
@@ -62,24 +46,13 @@
     padding-left: 2px;
     padding-right: 2px;
   }
-
-  .cards-container {
-    margin-top: -80px;
-  }
 }
 
 @media only screen and (max-width: 400px) {
   .tableau-pile .card {
     margin-top: -50px;
   }
-
-  .cards-container {
-    margin-top: -70px;
-  }
 }
 
 @media only screen and (max-width: 320px) {
-  .cards-container {
-    margin-top: -70px;
-  }
 }
