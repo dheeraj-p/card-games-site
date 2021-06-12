@@ -5,6 +5,7 @@
 .pile.empty {
   background-color: rgb(2, 108, 23);
   max-height: 120px;
+  border-radius: 8px;
 }
 
 .pile.invisible {
