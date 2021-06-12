@@ -1,8 +1,7 @@
-import { DndContext, useDraggable, useDroppable } from '@dnd-kit/core';
+import { DndContext } from '@dnd-kit/core';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { cardImages } from '../../../data/cardImages';
-import Card, { FacedDownCard } from './Card/Card';
 import {
   initialGameState,
   moveWithinTableau,
@@ -18,46 +17,18 @@ import {
 
 import styles from './Solitaire.module.css';
 import LoadingBox from '../../LoadingBox/LoadingBox';
-import Pile, { EmptyPile, InvisiblePile } from './Pile/Pile';
+import { InvisiblePile } from './Pile/Pile';
 import Tableau from './Tableau/Tabeau';
-import { SOURCE_TYPE, TARGET_TYPE } from './core/constants';
 import Stock from './Stock/Stock';
 import Waste from './Waste/Waste';
 import Foundation from './Foundation/Foundation';
-
-function isMovingWithinTableu(sourceType, targetType) {
-  return targetType == TARGET_TYPE.TABLEAU && sourceType == SOURCE_TYPE.TABLEAU;
-}
-
-function isMovingFromWasteToTableau(sourceType, targetType) {
-  return targetType == TARGET_TYPE.TABLEAU && sourceType == SOURCE_TYPE.WASTE;
-}
-
-function isMovingFromTableauToFoundation(sourceType, targetType) {
-  return (
-    targetType == TARGET_TYPE.FOUNDATION && sourceType == SOURCE_TYPE.TABLEAU
-  );
-}
-
-function isMovingFromWasteToFoundation(sourceType, targetType) {
-  return (
-    targetType == TARGET_TYPE.FOUNDATION && sourceType == SOURCE_TYPE.WASTE
-  );
-}
-
-function cacheImages(imageSources, onLoaded, onError) {
-  const promises = _.map(imageSources, imageSrc => {
-    return new Promise((resolve, reject) => {
-      const image = new Image();
-      image.src = imageSrc;
-      image.onload = resolve;
-      image.onerror = reject;
-      window[imageSrc] = image;
-    });
-  });
-
-  Promise.all(promises).then(onLoaded).catch(onError);
-}
+import {
+  isMovingFromTableauToFoundation,
+  isMovingFromWasteToFoundation,
+  isMovingFromWasteToTableau,
+  isMovingWithinTableu
+} from './utils';
+import { cacheImages } from '../../../common/utils';
 
 function Solitaire() {
   const [gameState, setGameState] = useState(initialGameState());
