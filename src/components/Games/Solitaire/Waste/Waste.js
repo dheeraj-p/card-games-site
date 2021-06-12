@@ -1,7 +1,7 @@
 import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
 import _ from 'lodash';
-import Card, { CardHole } from '../Card/Card';
+import Card, { CardHole, InvisibleCard } from '../Card/Card';
 import { SOURCE_TYPE } from '../core/constants';
 import { cardToString } from '../core/logic';
 import styles from './Waste.module.css';
@@ -21,7 +21,7 @@ function Waste({ cards, onDoubleTap, shouldFlipThree = false }) {
     <div>
       <CardHole />
       {_.isEmpty(cards) ? (
-        <></>
+        <InvisibleCard />
       ) : (
         <div
           className={styles['waste-card']}

@@ -1,13 +1,14 @@
-import { FacedDownCard } from '../Card/Card';
-import Pile from '../Pile/Pile';
+import _ from 'lodash';
+import { CardHole, FacedDownCard, InvisibleCard } from '../Card/Card';
 
 function Stock({ cards, onClick }) {
   const attributes = { onClick };
 
   return (
-    <Pile cards={cards} attributes={attributes}>
-      <FacedDownCard />
-    </Pile>
+    <div {...attributes}>
+      <CardHole />
+      {_.isEmpty(cards) ? <InvisibleCard /> : <FacedDownCard />}
+    </div>
   );
 }
 

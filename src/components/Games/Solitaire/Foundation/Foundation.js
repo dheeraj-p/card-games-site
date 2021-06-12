@@ -1,7 +1,7 @@
 import { useDroppable } from '@dnd-kit/core';
-import Card from '../Card/Card';
+import _ from 'lodash';
+import Card, { CardHole } from '../Card/Card';
 import { TARGET_TYPE } from '../core/constants';
-import Pile, { EmptyPile } from '../Pile/Pile';
 import styles from './Foundation.module.css';
 
 function Foundation({ cards, suit }) {
@@ -12,18 +12,25 @@ function Foundation({ cards, suit }) {
 
   const iconSrc = `/assets/icons/${_.lowerCase(suit.name)}_icon.png`;
 
-  const onEmptyRender = () => {
+  if (_.isEmpty(cards)) {
     return (
-      <EmptyPile className={styles.foundation} ref={setNodeRef}>
-        <img className={styles['foundation-icon']} src={iconSrc} />
-      </EmptyPile>
+      <div>
+        <CardHole />
+        <div className={styles.foundation} ref={setNodeRef}>
+          <img
+            className={styles['foundation-icon']}
+            src={iconSrc}
+            draggable={false}
+          />
+        </div>
+      </div>
     );
-  };
+  }
 
   return (
-    <Pile cards={cards} ref={setNodeRef} onEmpty={onEmptyRender}>
+    <div ref={setNodeRef}>
       <Card card={cards[0]} />
-    </Pile>
+    </div>
   );
 }
 

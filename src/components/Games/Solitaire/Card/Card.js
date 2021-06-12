@@ -23,5 +23,9 @@ function CardHole({ className }) {
   return <div className={`${styles.card} ${styles.hole} ${className}`} />;
 }
 
+function InvisibleCard({ className }) {
+  return <div className={`${styles.card} ${styles.invisible} ${className}`} />;
+}
+
 export default Card;
-export { FacedDownCard, CardHole };
+export { FacedDownCard, CardHole, InvisibleCard };

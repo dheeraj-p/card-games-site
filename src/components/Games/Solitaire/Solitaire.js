@@ -18,7 +18,6 @@ import {
 
 import styles from './Solitaire.module.css';
 import LoadingBox from '../../LoadingBox/LoadingBox';
-import { InvisiblePile } from './Pile/Pile';
 import Tableau from './Tableau/Tabeau';
 import Stock from './Stock/Stock';
 import Waste from './Waste/Waste';
@@ -31,6 +30,7 @@ import {
   isMovingWithinTableu
 } from './utils';
 import { cacheImages } from '../../../common/utils';
+import { InvisibleCard } from './Card/Card';
 
 function Solitaire() {
   const [gameStates, setGameStates] = useState([initialGameState()]);
@@ -132,7 +132,7 @@ function Solitaire() {
         <div className={styles.row}>
           <Stock cards={stock} onClick={onClickStock} />
           <Waste cards={waste} onDoubleTap={onWasteDoubleTap} />
-          <InvisiblePile />
+          <InvisibleCard />
           <Foundation cards={foundations.hearts} suit={SUIT_HEARTS} />
           <Foundation cards={foundations.spades} suit={SUIT_SPADES} />
           <Foundation cards={foundations.diamonds} suit={SUIT_DIMAONDS} />

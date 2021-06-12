@@ -11,6 +11,10 @@
   margin-bottom: -120px;
 }
 
+.card.invisible {
+  visibility: hidden;
+}
+
 .card > .image {
   width: 100%;
   height: 100%;
