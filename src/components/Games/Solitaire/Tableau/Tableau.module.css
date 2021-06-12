@@ -1,0 +1,17 @@
+.row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px;
+}
+
+.tableau-pile {
+  margin-top: 80px;
+}
+
+.tableau-pile .card {
+  margin-top: -80px;
+}
+
+.card-group {
+  touch-action: none;
+}

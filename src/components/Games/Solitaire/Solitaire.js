@@ -21,16 +21,8 @@ import {
 import styles from './Solitaire.module.css';
 import LoadingBox from '../../LoadingBox/LoadingBox';
 import Pile, { EmptyPile, InvisiblePile } from './Pile/Pile';
-
-const SOURCE_TYPE = {
-  TABLEAU: 'TABLEAU',
-  WASTE: 'WASTE_PILE'
-};
-
-const TARGET_TYPE = {
-  TABLEAU: 'TABLEAU',
-  FOUNDATION: 'FOUNDATION'
-};
+import Tableau from './Tableau/Tabeau';
+import { SOURCE_TYPE, TARGET_TYPE } from './core/constants';
 
 function Stock({ cards, onClick }) {
   const attributes = { onClick };
@@ -78,7 +70,7 @@ function Foundation({ cards, suit }) {
 
   const onEmptyRender = () => {
     return (
-      <EmptyPile className={styles.foundation}>
+      <EmptyPile className={styles.foundation} ref={setNodeRef}>
         <img className={styles['foundation-icon']} src={iconSrc} />
       </EmptyPile>
     );
@@ -87,59 +79,6 @@ function Foundation({ cards, suit }) {
   return (
     <Pile cards={cards} ref={setNodeRef} onEmpty={onEmptyRender}>
       <Card card={cards[0]} />
-    </Pile>
-  );
-}
-
-function CardGroup({ card, otherCardGroup }) {
-  const cardStr = cardToString(card);
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id: `card-${cardStr}`,
-    data: { sourceType: SOURCE_TYPE.TABLEAU, cardStr }
-  });
-
-  const style = {
-    transform: CSS.Translate.toString(transform)
-  };
-
-  return (
-    <div
-      className={styles['card-group']}
-      style={style}
-      ref={setNodeRef}
-      {...attributes}
-      {...listeners}
-    >
-      <Card className={styles.card} card={card} key={cardToString(card)} />
-      {otherCardGroup}
-    </div>
-  );
-}
-
-function TableauPile({ pile, id }) {
-  const { setNodeRef } = useDroppable({
-    id: `tableau-pile-${id}`,
-    data: { targetType: TARGET_TYPE.TABLEAU, targetPileIndex: id }
-  });
-
-  const faceUpCardsView = _.reduceRight(
-    pile.up,
-    (cardGroup, card) => {
-      return <CardGroup card={card} otherCardGroup={cardGroup} />;
-    },
-    <></>
-  );
-
-  return (
-    <Pile
-      cards={_.concat(pile.up, pile.down)}
-      className={styles['tableau-pile']}
-      ref={setNodeRef}
-    >
-      {_.map(pile.down, card => (
-        <FacedDownCard className={styles.card} key={cardToString(card)} />
-      ))}
-      {faceUpCardsView}
     </Pile>
   );
 }
@@ -244,11 +183,7 @@ function Solitaire() {
         <Foundation cards={foundations.clubs} suit={SUIT_CLUBS} />
       </div>
       <div className="m-top-medium" />
-      <div className={styles.row}>
-        {_.map(tableau, (pile, index) => (
-          <TableauPile pile={pile} key={index} id={index} />
-        ))}
-      </div>
+      <Tableau tableau={tableau} />
     </DndContext>
   ) : (
     <LoadingBox />
