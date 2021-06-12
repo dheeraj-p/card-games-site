@@ -16,3 +16,64 @@
   touch-action: none;
   cursor: pointer;
 }
+
+@media only screen and (max-width: 768px) {
+  .tableau-pile .card {
+    margin-top: -75px;
+  }
+
+  .tableau-pile {
+    margin-top: 75px;
+  }
+
+  .row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .tableau-pile .card {
+    margin-top: -70px;
+  }
+
+  .tableau-pile {
+    margin-top: 70px;
+  }
+}
+
+@media only screen and (max-width: 560px) {
+  .tableau-pile .card {
+    margin-top: -65px;
+  }
+
+  .tableau-pile {
+    margin-top: 65px;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .tableau-pile .card {
+    margin-top: -60px;
+  }
+
+  .row {
+    padding-left: 2px;
+    padding-right: 2px;
+  }
+
+  .tableau-pile {
+    margin-top: 60px;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .tableau-pile .card {
+    margin-top: -50px;
+  }
+
+  .tableau-pile {
+    margin-top: 50px;
+  }
+}
