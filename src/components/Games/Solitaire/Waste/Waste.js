@@ -1,9 +1,9 @@
 import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
-import Card from '../Card/Card';
+import _ from 'lodash';
+import Card, { CardHole } from '../Card/Card';
 import { SOURCE_TYPE } from '../core/constants';
 import { cardToString } from '../core/logic';
-import Pile from '../Pile/Pile';
 import styles from './Waste.module.css';
 
 function Waste({ cards, onDoubleTap, shouldFlipThree = false }) {
@@ -18,18 +18,23 @@ function Waste({ cards, onDoubleTap, shouldFlipThree = false }) {
   };
 
   return (
-    <Pile cards={cards}>
-      <div
-        className={styles['waste-card']}
-        style={style}
-        ref={setNodeRef}
-        {...attributes}
-        {...listeners}
-        onDoubleClick={() => onDoubleTap(cardOnTop)}
-      >
-        <Card card={cardOnTop} />
-      </div>
-    </Pile>
+    <div>
+      <CardHole />
+      {_.isEmpty(cards) ? (
+        <></>
+      ) : (
+        <div
+          className={styles['waste-card']}
+          style={style}
+          ref={setNodeRef}
+          {...attributes}
+          {...listeners}
+          onDoubleClick={() => onDoubleTap(cardOnTop)}
+        >
+          <Card card={cardOnTop} />
+        </div>
+      )}
+    </div>
   );
 }
 

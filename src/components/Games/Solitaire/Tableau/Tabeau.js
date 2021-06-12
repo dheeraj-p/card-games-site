@@ -64,7 +64,7 @@ function TableauPile({ pile, id, onDoubleTap }) {
 
   return (
     <div className={styles['tableau-pile']} ref={setNodeRef}>
-      <CardHole className={styles['card-hole']} />
+      <CardHole />
       <div>
         {_.map(pile.down, card => (
           <FacedDownCard className={styles.card} key={cardToString(card)} />
