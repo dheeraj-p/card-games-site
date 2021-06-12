@@ -22,6 +22,7 @@ import Tableau from './Tableau/Tabeau';
 import Stock from './Stock/Stock';
 import Waste from './Waste/Waste';
 import Foundation from './Foundation/Foundation';
+import Center from '../../Center/Center';
 import {
   isMovingFromTableauToFoundation,
   isMovingFromWasteToFoundation,
@@ -31,9 +32,11 @@ import {
 import { cacheImages } from '../../../common/utils';
 
 function Solitaire() {
-  const [gameState, setGameState] = useState(initialGameState());
+  const [gameStates, setGameStates] = useState([initialGameState()]);
   const [areImagesReady, setImagesReady] = useState(false);
 
+  const currentState = _.last(gameStates);
+  
   useEffect(() => {
     cacheImages(
       cardImages,
@@ -42,7 +45,7 @@ function Solitaire() {
     );
   }, []);
 
-  const { stock, waste, foundations, tableau } = gameState;
+  const { stock, waste, foundations, tableau } = currentState;
 
   const onDragEnd = ({ active, over }) => {
     if (_.isNil(active) || _.isNil(over)) {
@@ -51,17 +54,17 @@ function Solitaire() {
 
     const { sourceType } = active.data.current;
     const { targetType } = over.data.current;
-    let newGameState = gameState;
+    let newGameState = currentState;
 
     if (isMovingWithinTableu(sourceType, targetType)) {
       const { cardStr } = active.data.current;
       const { targetPileIndex } = over.data.current;
-      newGameState = moveWithinTableau(gameState, cardStr, targetPileIndex);
+      newGameState = moveWithinTableau(currentState, cardStr, targetPileIndex);
     }
 
     if (isMovingFromWasteToTableau(sourceType, targetType)) {
       const { targetPileIndex } = over.data.current;
-      newGameState = moveFromWasteToTableau(gameState, targetPileIndex);
+      newGameState = moveFromWasteToTableau(currentState, targetPileIndex);
     }
 
     if (isMovingFromTableauToFoundation(sourceType, targetType)) {
@@ -69,7 +72,7 @@ function Solitaire() {
       const { foundationTarget } = over.data.current;
 
       newGameState = moveFromTableauToFoundation(
-        gameState,
+        currentState,
         cardStr,
         foundationTarget
       );
@@ -77,16 +80,35 @@ function Solitaire() {
 
     if (isMovingFromWasteToFoundation(sourceType, targetType)) {
       const { foundationTarget } = over.data.current;
-      newGameState = moveFromWasteToFoundation(gameState, foundationTarget);
+      newGameState = moveFromWasteToFoundation(currentState, foundationTarget);
     }
-    setGameState(newGameState);
+
+    if (_.isEqual(currentState, newGameState)) {
+      return;
+    }
+
+    setGameStates([...gameStates, newGameState]);
   };
 
-  const onClickStock = () => setGameState(popFromStock(gameState));
+  const onClickStock = () =>
+    setGameStates([...gameStates, popFromStock(currentState)]);
+
+  const undoGame = () => {
+    if (gameStates.length < 2) {
+      return;
+    }
+    setGameStates(_.dropRight(gameStates, 1));
+  };
 
   return areImagesReady ? (
     <DndContext onDragEnd={onDragEnd}>
       <div className={styles['no-select']}>
+        <div className={styles.header}>
+          <Center className={styles['game-title']}>Solitaire</Center>
+          <button className={styles.undo} onClick={undoGame}>
+            Undo
+          </button>
+        </div>
         <div className={styles.row}>
           <Stock cards={stock} onClick={onClickStock} />
           <Waste cards={waste} />

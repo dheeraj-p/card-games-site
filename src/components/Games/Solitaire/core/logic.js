@@ -173,7 +173,7 @@ function moveFromTableauToFoundation(gameState, cardStr, foundationTarget) {
   }
 
   const updatedFoundations = _.update(
-    foundations,
+    _.clone(foundations),
     foundationSuitName,
     current => [card, ...current]
   );
@@ -198,8 +198,8 @@ function moveFromWasteToFoundation(gameState, foundationTarget) {
     return gameState;
   }
 
-  const updatedFoundations = _.update(
-    foundations,
+  const updatedFoundations = _.chain(
+    _.clone(foundations),
     foundationSuitName,
     current => [cardOnTop, ...current]
   );
@@ -237,6 +237,12 @@ function popFromStock(gameState) {
   return { ...gameState, stock: updatedStock, waste: updatedWaste };
 }
 
+function getGameStatus(gameState) {
+  const { foundations } = gameState;
+  const isFilled = foundation => foundation.length == 13;
+  return _.chain(foundations).values().every(isFilled);
+}
+
 export {
   initialGameState,
   cardToString,
@@ -245,6 +251,7 @@ export {
   moveFromTableauToFoundation,
   moveFromWasteToFoundation,
   popFromStock,
+  getGameStatus,
   SUIT_CLUBS,
   SUIT_DIMAONDS,
   SUIT_HEARTS,

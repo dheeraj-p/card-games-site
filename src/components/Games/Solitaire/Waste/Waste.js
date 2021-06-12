@@ -20,7 +20,7 @@ function Waste({ cards, shouldFlipThree = false }) {
   return (
     <Pile cards={cards}>
       <div
-        class={styles['waste-card']}
+        className={styles['waste-card']}
         style={style}
         ref={setNodeRef}
         {...attributes}

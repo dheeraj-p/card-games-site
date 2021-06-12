@@ -7,3 +7,25 @@
 .no-select {
   user-select: none;
 }
+
+.header {
+  padding: 16px 0px;
+  display: flex;
+}
+
+.undo {
+  margin-right: 8px;
+  cursor: pointer;
+  background-color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+.undo:hover {
+  background-color: rgb(220, 220, 220);
+}
+
+.game-title {
+  font-size: 22px;
+  flex-grow: 1;
+}
