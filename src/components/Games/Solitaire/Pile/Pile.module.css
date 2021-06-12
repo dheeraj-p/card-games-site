@@ -1,0 +1,12 @@
+.pile {
+  width: 12%;
+}
+
+.pile.empty {
+  background-color: rgb(2, 108, 23);
+  max-height: 120px;
+}
+
+.pile.invisible {
+  visibility: hidden;
+}

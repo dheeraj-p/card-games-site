@@ -3,7 +3,7 @@ import { CSS } from '@dnd-kit/utilities';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { cardImages } from '../../../data/cardImages';
-import Card, { FacedDownCard } from './Card';
+import Card, { FacedDownCard } from './Card/Card';
 import {
   cardToString,
   initialGameState,
@@ -20,6 +20,7 @@ import {
 
 import styles from './Solitaire.module.css';
 import LoadingBox from '../../LoadingBox/LoadingBox';
+import Pile, { EmptyPile, InvisiblePile } from './Pile/Pile';
 
 const SOURCE_TYPE = {
   TABLEAU: 'TABLEAU',
@@ -30,42 +31,6 @@ const TARGET_TYPE = {
   TABLEAU: 'TABLEAU',
   FOUNDATION: 'FOUNDATION'
 };
-
-const EmptyPile = React.forwardRef(({ attributes }, ref) => {
-  return (
-    <div
-      ref={ref}
-      className={`${styles.pile} ${styles.empty}`}
-      {...attributes}
-    />
-  );
-});
-
-function InvisiblePile() {
-  return <div className={`${styles.pile} ${styles.invisible}`} />;
-}
-
-const Pile = React.forwardRef(
-  ({ cards, onEmpty, className, children, attributes }, ref) => {
-    if (!_.isEmpty(cards)) {
-      return (
-        <div
-          ref={ref}
-          className={`${styles.pile} ${className}`}
-          {...attributes}
-        >
-          {children}
-        </div>
-      );
-    }
-
-    if (_.isNil(onEmpty)) {
-      return <EmptyPile ref={ref} attributes={attributes} />;
-    }
-
-    return onEmpty();
-  }
-);
 
 function Stock({ cards, onClick }) {
   const attributes = { onClick };
@@ -90,7 +55,13 @@ function Waste({ cards, shouldFlipThree = false }) {
 
   return (
     <Pile cards={cards}>
-      <div class={styles['waste-card']} style={style} ref={setNodeRef} {...attributes} {...listeners}>
+      <div
+        class={styles['waste-card']}
+        style={style}
+        ref={setNodeRef}
+        {...attributes}
+        {...listeners}
+      >
         <Card card={cardOnTop} />
       </div>
     </Pile>
@@ -107,9 +78,9 @@ function Foundation({ cards, suit }) {
 
   const onEmptyRender = () => {
     return (
-      <div ref={setNodeRef} className={`${styles.pile} ${styles.empty} ${styles.foundation}`}>
+      <EmptyPile className={styles.foundation}>
         <img className={styles['foundation-icon']} src={iconSrc} />
-      </div>
+      </EmptyPile>
     );
   };
 
@@ -139,7 +110,7 @@ function CardGroup({ card, otherCardGroup }) {
       {...attributes}
       {...listeners}
     >
-      <Card card={card} key={cardToString(card)} />
+      <Card className={styles.card} card={card} key={cardToString(card)} />
       {otherCardGroup}
     </div>
   );
@@ -162,11 +133,11 @@ function TableauPile({ pile, id }) {
   return (
     <Pile
       cards={_.concat(pile.up, pile.down)}
-      className={styles.tableau}
+      className={styles['tableau-pile']}
       ref={setNodeRef}
     >
       {_.map(pile.down, card => (
-        <FacedDownCard key={cardToString(card)} />
+        <FacedDownCard className={styles.card} key={cardToString(card)} />
       ))}
       {faceUpCardsView}
     </Pile>
