@@ -4,18 +4,6 @@
   padding: 8px;
 }
 
-.waste-card {
-  touch-action: none;
-}
-
-.foundation {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.foundation-icon {
-  height: 60px;
-  width: 60px;
-  opacity: 0.8;
+.no-select {
+  user-select: none;
 }

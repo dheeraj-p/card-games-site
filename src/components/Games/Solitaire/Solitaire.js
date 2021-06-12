@@ -1,11 +1,9 @@
 import { DndContext, useDraggable, useDroppable } from '@dnd-kit/core';
-import { CSS } from '@dnd-kit/utilities';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { cardImages } from '../../../data/cardImages';
 import Card, { FacedDownCard } from './Card/Card';
 import {
-  cardToString,
   initialGameState,
   moveWithinTableau,
   moveFromWasteToTableau,
@@ -23,65 +21,9 @@ import LoadingBox from '../../LoadingBox/LoadingBox';
 import Pile, { EmptyPile, InvisiblePile } from './Pile/Pile';
 import Tableau from './Tableau/Tabeau';
 import { SOURCE_TYPE, TARGET_TYPE } from './core/constants';
-
-function Stock({ cards, onClick }) {
-  const attributes = { onClick };
-
-  return (
-    <Pile cards={cards} attributes={attributes}>
-      <FacedDownCard />
-    </Pile>
-  );
-}
-
-function Waste({ cards, shouldFlipThree = false }) {
-  const cardOnTop = cards[0];
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id: `card-${cardToString(cardOnTop)}`,
-    data: { sourceType: SOURCE_TYPE.WASTE }
-  });
-
-  const style = {
-    transform: CSS.Translate.toString(transform)
-  };
-
-  return (
-    <Pile cards={cards}>
-      <div
-        class={styles['waste-card']}
-        style={style}
-        ref={setNodeRef}
-        {...attributes}
-        {...listeners}
-      >
-        <Card card={cardOnTop} />
-      </div>
-    </Pile>
-  );
-}
-
-function Foundation({ cards, suit }) {
-  const { setNodeRef } = useDroppable({
-    id: `foundation-pile-${suit.name}`,
-    data: { targetType: TARGET_TYPE.FOUNDATION, foundationTarget: suit.name }
-  });
-
-  const iconSrc = `/assets/icons/${_.lowerCase(suit.name)}_icon.png`;
-
-  const onEmptyRender = () => {
-    return (
-      <EmptyPile className={styles.foundation} ref={setNodeRef}>
-        <img className={styles['foundation-icon']} src={iconSrc} />
-      </EmptyPile>
-    );
-  };
-
-  return (
-    <Pile cards={cards} ref={setNodeRef} onEmpty={onEmptyRender}>
-      <Card card={cards[0]} />
-    </Pile>
-  );
-}
+import Stock from './Stock/Stock';
+import Waste from './Waste/Waste';
+import Foundation from './Foundation/Foundation';
 
 function isMovingWithinTableu(sourceType, targetType) {
   return targetType == TARGET_TYPE.TABLEAU && sourceType == SOURCE_TYPE.TABLEAU;
@@ -173,17 +115,19 @@ function Solitaire() {
 
   return areImagesReady ? (
     <DndContext onDragEnd={onDragEnd}>
-      <div className={styles.row}>
-        <Stock cards={stock} onClick={onClickStock} />
-        <Waste cards={waste} />
-        <InvisiblePile />
-        <Foundation cards={foundations.hearts} suit={SUIT_HEARTS} />
-        <Foundation cards={foundations.spades} suit={SUIT_SPADES} />
-        <Foundation cards={foundations.diamonds} suit={SUIT_DIMAONDS} />
-        <Foundation cards={foundations.clubs} suit={SUIT_CLUBS} />
+      <div className={styles['no-select']}>
+        <div className={styles.row}>
+          <Stock cards={stock} onClick={onClickStock} />
+          <Waste cards={waste} />
+          <InvisiblePile />
+          <Foundation cards={foundations.hearts} suit={SUIT_HEARTS} />
+          <Foundation cards={foundations.spades} suit={SUIT_SPADES} />
+          <Foundation cards={foundations.diamonds} suit={SUIT_DIMAONDS} />
+          <Foundation cards={foundations.clubs} suit={SUIT_CLUBS} />
+        </div>
+        <div className="m-top-medium" />
+        <Tableau tableau={tableau} />
       </div>
-      <div className="m-top-medium" />
-      <Tableau tableau={tableau} />
     </DndContext>
   ) : (
     <LoadingBox />
