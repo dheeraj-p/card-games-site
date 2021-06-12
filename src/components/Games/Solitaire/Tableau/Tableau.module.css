@@ -4,8 +4,8 @@
   padding: 8px;
 }
 
-.tableau-pile {
-  margin-top: 80px;
+.cards-container {
+  margin-top: -120px;
 }
 
 .tableau-pile .card {
@@ -22,14 +22,14 @@
     margin-top: -75px;
   }
 
-  .tableau-pile {
-    margin-top: 75px;
-  }
-
   .row {
     display: flex;
     justify-content: space-between;
     padding: 8px;
+  }
+
+  .cards-container {
+    margin-top: -110px;
   }
 }
 
@@ -38,8 +38,8 @@
     margin-top: -70px;
   }
 
-  .tableau-pile {
-    margin-top: 70px;
+  .cards-container {
+    margin-top: -100px;
   }
 }
 
@@ -48,8 +48,8 @@
     margin-top: -65px;
   }
 
-  .tableau-pile {
-    margin-top: 65px;
+  .cards-container {
+    margin-top: -90px;
   }
 }
 
@@ -63,8 +63,8 @@
     padding-right: 2px;
   }
 
-  .tableau-pile {
-    margin-top: 60px;
+  .cards-container {
+    margin-top: -80px;
   }
 }
 
@@ -73,7 +73,13 @@
     margin-top: -50px;
   }
 
-  .tableau-pile {
-    margin-top: 50px;
+  .cards-container {
+    margin-top: -70px;
+  }
+}
+
+@media only screen and (max-width: 320px) {
+  .cards-container {
+    margin-top: -70px;
   }
 }

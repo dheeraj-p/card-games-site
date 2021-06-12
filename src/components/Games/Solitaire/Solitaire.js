@@ -138,7 +138,7 @@ function Solitaire() {
           <Foundation cards={foundations.diamonds} suit={SUIT_DIMAONDS} />
           <Foundation cards={foundations.clubs} suit={SUIT_CLUBS} />
         </div>
-        <div className="m-top-medium" />
+        <div className="m-medium" />
         <Tableau tableau={tableau} onDoubleTap={onTableauDoubleTap} />
       </div>
     </DndContext>

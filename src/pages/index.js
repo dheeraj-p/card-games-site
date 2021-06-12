@@ -8,7 +8,7 @@ function HomePage() {
   return (
     <div>
       <Logo />
-      <div className="m-top-medium" />
+      <div className="m-medium" />
       <Center>
         <GameBox>
           <GameList games={Object.values(gamesData)} />

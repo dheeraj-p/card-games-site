@@ -1,9 +1,8 @@
 import { useDraggable, useDroppable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
-import Card, { FacedDownCard } from '../Card/Card';
+import Card, { CardHole, FacedDownCard } from '../Card/Card';
 import { SOURCE_TYPE, TARGET_TYPE } from '../core/constants';
 import { cardToString } from '../core/logic';
-import Pile from '../Pile/Pile';
 import styles from './Tableau.module.css';
 
 function CardGroup({ card, otherCardGroup, onDoubleTap }) {
@@ -64,16 +63,15 @@ function TableauPile({ pile, id, onDoubleTap }) {
   );
 
   return (
-    <Pile
-      cards={_.concat(pile.up, pile.down)}
-      className={styles['tableau-pile']}
-      ref={setNodeRef}
-    >
-      {_.map(pile.down, card => (
-        <FacedDownCard className={styles.card} key={cardToString(card)} />
-      ))}
-      {faceUpCardsView}
-    </Pile>
+    <div className={styles['tableau-pile']} ref={setNodeRef}>
+      <CardHole className={styles['card-hole']} />
+      <div className={styles['cards-container']}>
+        {_.map(pile.down, card => (
+          <FacedDownCard className={styles.card} key={cardToString(card)} />
+        ))}
+        {faceUpCardsView}
+      </div>
+    </div>
   );
 }
 

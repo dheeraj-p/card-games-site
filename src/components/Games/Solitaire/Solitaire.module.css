@@ -30,3 +30,10 @@
   font-size: 22px;
   flex-grow: 1;
 }
+
+@media only screen and (max-width: 480px) {
+  .row {
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+}

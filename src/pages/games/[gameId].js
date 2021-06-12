@@ -17,7 +17,7 @@ function Game() {
   return (
     <div>
       <Logo />
-      <div className="m-top-medium"></div>
+      <div className="m-medium"></div>
       <Center>
         <GameBox>
           <GameComponent />

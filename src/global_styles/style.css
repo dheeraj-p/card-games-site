@@ -7,8 +7,8 @@ body {
   color: whitesmoke;
 }
 
-.m-top-medium {
-  margin-top: 40px;
+.m-medium {
+  height: 40px;
 }
 
 .title {
@@ -17,7 +17,6 @@ body {
 
 @media only screen and (max-width: 768px) {
   body {
-    padding-left: 0;
-    padding-right: 0;
+    padding: 0;
   }
 }

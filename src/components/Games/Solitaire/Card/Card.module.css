@@ -1,9 +1,13 @@
 .card {
-  width: 100%;
+  width: 90px;
   height: 120px;
   border-radius: 8px;
   box-sizing: border-box;
   font-size: 0px; /* To fix weird padding in outline */
+}
+
+.card.hole {
+  background-color: rgb(2, 108, 23);
 }
 
 .card > .image {
@@ -13,36 +17,42 @@
 
 @media only screen and (max-width: 768px) {
   .card {
+    width: 85px;
     height: 110px;
   }
 }
 
 @media only screen and (max-width: 640px) {
   .card {
+    width: 75px;
     height: 100px;
   }
 }
 
 @media only screen and (max-width: 560px) {
   .card {
+    width: 65px;
     height: 90px;
   }
 }
 
 @media only screen and (max-width: 480px) {
   .card {
+    width: 55px;
     height: 80px;
   }
 }
 
 @media only screen and (max-width: 400px) {
   .card {
+    width: 48px;
     height: 70px;
   }
 }
 
 @media only screen and (max-width: 320px) {
   .card {
+    width: 44px;
     height: 65px;
   }
 }

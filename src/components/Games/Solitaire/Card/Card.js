@@ -19,5 +19,9 @@ function Card({ card, className, attributes }) {
   );
 }
 
+function CardHole({ className }) {
+  return <div className={`${styles.card} ${styles.hole} ${className}`} />;
+}
+
 export default Card;
-export { FacedDownCard };
+export { FacedDownCard, CardHole };
