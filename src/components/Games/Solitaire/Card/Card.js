@@ -1,5 +1,6 @@
 import styles from './Card.module.css';
 import { cardToString } from '../core/logic';
+import React, { useRef } from 'react';
 
 function FacedDownCard({ className }) {
   const facedDownCard = `/assets/cards/red_back-min.png`;
@@ -10,14 +11,14 @@ function FacedDownCard({ className }) {
   );
 }
 
-function Card({ card, className, attributes }) {
+const Card = React.forwardRef(({ card, className, attributes }, ref) => {
   const imageSrc = `/assets/cards/${cardToString(card)}-min.png`;
   return (
-    <div className={`${styles.card} ${className}`} {...attributes}>
+    <div className={`${styles.card} ${className}`} ref={ref} {...attributes}>
       <img src={imageSrc} className={styles.image} draggable={false} />
     </div>
   );
-}
+});
 
 function CardHole({ className }) {
   return <div className={`${styles.card} ${styles.hole} ${className}`} />;

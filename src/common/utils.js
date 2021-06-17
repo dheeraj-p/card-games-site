@@ -13,4 +13,19 @@ function cacheImages(imageSources, onLoaded, onError) {
   Promise.all(promises).then(onLoaded).catch(onError);
 }
 
-export { cacheImages };
+const mergeRefs = (...refs) => {
+  const filteredRefs = refs.filter(Boolean);
+  if (!filteredRefs.length) return null;
+  if (filteredRefs.length === 0) return filteredRefs[0];
+  return inst => {
+    for (const ref of filteredRefs) {
+      if (typeof ref === 'function') {
+        ref(inst);
+      } else if (ref) {
+        ref.current = inst;
+      }
+    }
+  };
+};
+
+export { cacheImages, mergeRefs };

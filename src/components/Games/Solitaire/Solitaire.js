@@ -1,6 +1,6 @@
 import { DndContext } from '@dnd-kit/core';
 import _ from 'lodash';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { cardImages } from '../../../data/cardImages';
 import {
   initialGameState,
@@ -35,6 +35,17 @@ import { InvisibleCard } from './Card/Card';
 function Solitaire() {
   const [gameStates, setGameStates] = useState([initialGameState()]);
   const [areImagesReady, setImagesReady] = useState(false);
+  const heartsFoundationRef = useRef();
+  const clubsFoundationRef = useRef();
+  const diamondsFoundationRef = useRef();
+  const spadesFoundationRef = useRef();
+
+  const getFoundationRef = foundationName => {
+    if (_.lowerCase(foundationName) == 'hearts') return heartsFoundationRef;
+    if (_.lowerCase(foundationName) == 'clubs') return clubsFoundationRef;
+    if (_.lowerCase(foundationName) == 'diamonds') return diamondsFoundationRef;
+    if (_.lowerCase(foundationName) == 'spades') return spadesFoundationRef;
+  };
 
   const currentState = _.last(gameStates);
 
@@ -44,6 +55,24 @@ function Solitaire() {
     }
 
     setGameStates([...gameStates, newGameState]);
+  };
+
+  const animateCard = (gameState, cardRef, targetRef) => {
+    if (_.isEqual(currentState, gameState)) return;
+
+    cardRef.current.addEventListener('transitionend', e => {
+      updateGameState(gameState);
+    });
+
+    cardRef.current.style.transition = 'transform 0.3s';
+    const targetTop = targetRef.current.offsetTop;
+    const targetLeft = targetRef.current.offsetLeft;
+    const cardTop = cardRef.current.offsetTop;
+    const cardLeft = cardRef.current.offsetLeft;
+
+    const offsetTop = targetTop - cardTop;
+    const offsetLeft = targetLeft - cardLeft;
+    cardRef.current.style.transform = `translate(${offsetLeft}px, ${offsetTop}px)`;
   };
 
   useEffect(() => {
@@ -104,7 +133,7 @@ function Solitaire() {
     setGameStates(_.dropRight(gameStates, 1));
   };
 
-  const onTableauDoubleTap = card => {
+  const onTableauDoubleTap = (card, cardRef) => {
     const foundationTarget = _.lowerCase(card.suit.name);
     const newGameState = moveFromTableauToFoundation(
       currentState,
@@ -112,12 +141,16 @@ function Solitaire() {
       foundationTarget
     );
 
-    updateGameState(newGameState);
+    animateCard(newGameState, cardRef, getFoundationRef(foundationTarget));
   };
 
-  const onWasteDoubleTap = card => {
+  const onWasteDoubleTap = (card, cardRef) => {
     const foundationTarget = _.lowerCase(card.suit.name);
-    updateGameState(moveFromWasteToFoundation(currentState, foundationTarget));
+    animateCard(
+      moveFromWasteToFoundation(currentState, foundationTarget),
+      cardRef,
+      getFoundationRef(foundationTarget)
+    );
   };
 
   return areImagesReady ? (
@@ -133,10 +166,26 @@ function Solitaire() {
           <Stock cards={stock} onClick={onClickStock} />
           <Waste cards={waste} onDoubleTap={onWasteDoubleTap} />
           <InvisibleCard />
-          <Foundation cards={foundations.hearts} suit={SUIT_HEARTS} />
-          <Foundation cards={foundations.spades} suit={SUIT_SPADES} />
-          <Foundation cards={foundations.diamonds} suit={SUIT_DIMAONDS} />
-          <Foundation cards={foundations.clubs} suit={SUIT_CLUBS} />
+          <Foundation
+            cards={foundations.hearts}
+            suit={SUIT_HEARTS}
+            ref={heartsFoundationRef}
+          />
+          <Foundation
+            cards={foundations.spades}
+            suit={SUIT_SPADES}
+            ref={spadesFoundationRef}
+          />
+          <Foundation
+            cards={foundations.diamonds}
+            suit={SUIT_DIMAONDS}
+            ref={diamondsFoundationRef}
+          />
+          <Foundation
+            cards={foundations.clubs}
+            suit={SUIT_CLUBS}
+            ref={clubsFoundationRef}
+          />
         </div>
         <div className="m-medium" />
         <Tableau tableau={tableau} onDoubleTap={onTableauDoubleTap} />

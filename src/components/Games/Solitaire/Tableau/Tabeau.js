@@ -1,5 +1,6 @@
 import { useDraggable, useDroppable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
+import { useRef } from 'react';
 import Card, { CardHole, FacedDownCard } from '../Card/Card';
 import { SOURCE_TYPE, TARGET_TYPE } from '../core/constants';
 import { cardToString } from '../core/logic';
@@ -12,6 +13,8 @@ function CardGroup({ card, otherCardGroup, onDoubleTap }) {
     data: { sourceType: SOURCE_TYPE.TABLEAU, cardStr }
   });
 
+  const cardRef = useRef();
+
   const style = {
     transform: CSS.Translate.toString(transform)
   };
@@ -19,7 +22,7 @@ function CardGroup({ card, otherCardGroup, onDoubleTap }) {
   const cardAttrs = {
     onDoubleClick: event => {
       event.preventDefault();
-      onDoubleTap(card);
+      onDoubleTap(card, cardRef);
     }
   };
 
@@ -35,6 +38,7 @@ function CardGroup({ card, otherCardGroup, onDoubleTap }) {
         className={styles.card}
         card={card}
         key={cardToString(card)}
+        ref={cardRef}
         attributes={cardAttrs}
       />
       {otherCardGroup}
@@ -53,6 +57,7 @@ function TableauPile({ pile, id, onDoubleTap }) {
     (cardGroup, card) => {
       return (
         <CardGroup
+          key={cardToString(card)}
           card={card}
           otherCardGroup={cardGroup}
           onDoubleTap={onDoubleTap}

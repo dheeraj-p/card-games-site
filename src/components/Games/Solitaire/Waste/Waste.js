@@ -1,6 +1,8 @@
 import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
 import _ from 'lodash';
+import { useRef } from 'react';
+import { mergeRefs } from '../../../../common/utils';
 import Card, { CardHole, InvisibleCard } from '../Card/Card';
 import { SOURCE_TYPE } from '../core/constants';
 import { cardToString } from '../core/logic';
@@ -13,6 +15,7 @@ function Waste({ cards, onDoubleTap, shouldFlipThree = false }) {
     data: { sourceType: SOURCE_TYPE.WASTE }
   });
 
+  const cardRef = useRef();
   const style = {
     transform: CSS.Translate.toString(transform)
   };
@@ -26,10 +29,11 @@ function Waste({ cards, onDoubleTap, shouldFlipThree = false }) {
         <div
           className={styles['waste-card']}
           style={style}
-          ref={setNodeRef}
+          key={cardToString(cardOnTop)}
+          ref={mergeRefs(setNodeRef, cardRef)}
           {...attributes}
           {...listeners}
-          onDoubleClick={() => onDoubleTap(cardOnTop)}
+          onDoubleClick={() => onDoubleTap(cardOnTop, cardRef)}
         >
           <Card card={cardOnTop} />
         </div>
