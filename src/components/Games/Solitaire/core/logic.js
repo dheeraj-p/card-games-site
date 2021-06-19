@@ -237,10 +237,10 @@ function popFromStock(gameState) {
   return { ...gameState, stock: updatedStock, waste: updatedWaste };
 }
 
-function getGameStatus(gameState) {
+function isGameEnded(gameState) {
   const { foundations } = gameState;
   const isFilled = foundation => foundation.length == 13;
-  return _.chain(foundations).values().every(isFilled);
+  return _.chain(foundations).values().every(isFilled).value();
 }
 
 export {
@@ -251,7 +251,7 @@ export {
   moveFromTableauToFoundation,
   moveFromWasteToFoundation,
   popFromStock,
-  getGameStatus,
+  isGameEnded,
   SUIT_CLUBS,
   SUIT_DIMAONDS,
   SUIT_HEARTS,

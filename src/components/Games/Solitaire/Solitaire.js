@@ -8,6 +8,7 @@ import {
   moveFromWasteToTableau,
   moveFromTableauToFoundation,
   moveFromWasteToFoundation,
+  isGameEnded,
   popFromStock,
   SUIT_HEARTS,
   SUIT_SPADES,
@@ -31,6 +32,7 @@ import {
 } from './utils';
 import { cacheImages } from '../../../common/utils';
 import { InvisibleCard } from './Card/Card';
+import GameEndMessage from '../../GameEndMessage/GameEndMessage';
 
 function Solitaire() {
   const [gameStates, setGameStates] = useState([initialGameState()]);
@@ -39,6 +41,8 @@ function Solitaire() {
   const clubsFoundationRef = useRef();
   const diamondsFoundationRef = useRef();
   const spadesFoundationRef = useRef();
+
+  const startNewGame = () => setGameStates([initialGameState()]);
 
   const getFoundationRef = foundationName => {
     if (_.lowerCase(foundationName) == 'hearts') return heartsFoundationRef;
@@ -188,7 +192,14 @@ function Solitaire() {
           />
         </div>
         <div className="m-medium" />
-        <Tableau tableau={tableau} onDoubleTap={onTableauDoubleTap} />
+        {isGameEnded(currentState) ? (
+          <GameEndMessage
+            message="Congratulations, You won!"
+            onNewGame={startNewGame}
+          />
+        ) : (
+          <Tableau tableau={tableau} onDoubleTap={onTableauDoubleTap} />
+        )}
       </div>
     </DndContext>
   ) : (
