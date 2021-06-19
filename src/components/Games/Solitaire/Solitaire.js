@@ -162,8 +162,11 @@ function Solitaire() {
       <div className={styles['no-select']}>
         <div className={styles.header}>
           <Center className={styles['game-title']}>Solitaire</Center>
-          <button className={styles.undo} onClick={undoGame}>
+          <button className={styles.button} onClick={undoGame}>
             Undo
+          </button>
+          <button className={styles.button} onClick={startNewGame}>
+            New Game
           </button>
         </div>
         <div className={styles.row}>

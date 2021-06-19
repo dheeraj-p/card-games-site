@@ -14,7 +14,7 @@
   display: flex;
 }
 
-.undo {
+.button {
   margin-right: 8px;
   cursor: pointer;
   background-color: white;
@@ -22,7 +22,7 @@
   border-radius: 5px;
 }
 
-.undo:hover {
+.button:hover {
   background-color: rgb(220, 220, 220);
 }
 
