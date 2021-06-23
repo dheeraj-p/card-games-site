@@ -27,7 +27,8 @@
 }
 
 .game-title {
-  font-size: 22px;
+  font-size: 24px;
+  font-family: Arial, Helvetica, sans-serif;
   flex-grow: 1;
 }
 

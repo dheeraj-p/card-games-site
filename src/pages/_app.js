@@ -6,7 +6,9 @@ export default function MyApp({ Component, pageProps }) {
   return (
     <>
       <Head>
-        <title>Free Card Games</title>
+        <title>All Games | QuickGame.io</title>
+        <meta name="description" property="og:description" content="All Games | QuickGame.io" />
+        <meta name="title" property="og:title" content="All Games | QuickGame.io" />
       </Head>
       <Component {...pageProps} />
     </>

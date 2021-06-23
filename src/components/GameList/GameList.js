@@ -5,11 +5,13 @@ import styles from './GameList.module.css';
 function GameItem({ gameId, name, icon }) {
   return (
     <Link href={`/games/${gameId}`}>
-      <div className={styles['game-card']}>
+      <div>
+        <div className={styles['game-card']}>
+          <Center>
+            <img className={styles.icon} src={`/assets/icons/${icon}`} />
+          </Center>
+        </div>
         <Center>{name}</Center>
-        <Center>
-          <img className={styles.icon} src={`/assets/icons/${icon}`} />
-        </Center>
       </div>
     </Link>
   );
