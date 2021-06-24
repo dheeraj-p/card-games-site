@@ -42,21 +42,14 @@ function HomePage() {
               the screen etc. So, don't feel bad if you make a suggestion and I
               deny it, we deny 99% of all suggestions.
             </p>
+            <strong>Q: Does this site use cookies?</strong>
+            <p>A: No we don't use any cookies or trackers.</p>
             <strong>Q: Why can't I see my statistics?</strong>
             <p>
               A: This goes back to simplicity again. We don't want people to
               have to login to the site. We don't want to keep passwords in a
               database and be responsible for them. So, we don't store them
               anywhere.
-            </p>
-            <strong>Q: I saw an offensive ad. Can you remove it?</strong>
-            <p>
-              A: If you see an ad that is offensive to you then please contact
-              us and we'll try our best to block it. Due to the way advertising
-              works we can't always immediately find the ads to block them, but
-              if you send a screenshot of it, or you remember any text on it or
-              a url then there's a much higher chance that we can find it and
-              block it.
             </p>
           </div>
         </div>
