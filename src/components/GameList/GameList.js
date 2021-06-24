@@ -19,7 +19,7 @@ function GameItem({ gameId, name, icon }) {
 
 function GameList({ games }) {
   return (
-    <div>
+    <div className={styles.container}>
       <Center className={`title ${styles.title}`}>Available Games</Center>
       <div className={styles.games}>
         {games.map(({ gameId, name, icon }) => (
