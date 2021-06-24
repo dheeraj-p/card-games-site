@@ -4,7 +4,7 @@ import styles from './GameList.module.css';
 
 function GameItem({ gameId, name, icon }) {
   return (
-    <Link href={`/games/${gameId}`}>
+    <Link href={`/games/${gameId}`} as={`/games/${gameId}`}>
       <div>
         <div className={styles['game-card']}>
           <Center>
