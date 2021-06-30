@@ -3,7 +3,7 @@ module.exports = {
   exportPathMap: function() {
     return {
       '/': { page: '/' },
-      '/games/solitaire' : {page: '/games/solitaire'}
+      '/solitaire' : {page: '/solitaire'}
     };
   }
 };
