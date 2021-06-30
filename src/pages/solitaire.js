@@ -1,8 +1,8 @@
 import Head from 'next/head';
-import Center from '../../components/Center/Center';
-import GameBox from '../../components/GameBox/GameBox';
-import Logo from '../../components/Logo/Logo';
-import Solitaire from '../../components/Games/Solitaire/Solitaire';
+import Center from '../components/Center/Center';
+import GameBox from '../components/GameBox/GameBox';
+import Logo from '../components/Logo/Logo';
+import Solitaire from '../components/Games/Solitaire/Solitaire';
 
 function Game() {
   return (
@@ -32,26 +32,26 @@ function Game() {
             <h3>The different piles</h3>
             <p>
               There are four different types of piles in Solitaire. They are:
-              <ul>
-                <li>
-                  <strong>The Stock:</strong> The pile of facedown cards in the
-                  upper left corner.
-                </li>
-                <li>
-                  <strong>The Waste:</strong> The faceup pile next to the Stock
-                  in the upper left
-                </li>
-                corner.
-                <li>
-                  <strong>The Foundations:</strong> The four piles in the upper
-                  right corner.
-                </li>
-                <li>
-                  <strong>The Tableau:</strong> The seven piles that make up the
-                  main table.
-                </li>
-              </ul>
             </p>
+            <ul>
+              <li>
+                <strong>The Stock:</strong> The pile of facedown cards in the
+                upper left corner.
+              </li>
+              <li>
+                <strong>The Waste:</strong> The faceup pile next to the Stock in
+                the upper left
+              </li>
+              corner.
+              <li>
+                <strong>The Foundations:</strong> The four piles in the upper
+                right corner.
+              </li>
+              <li>
+                <strong>The Tableau:</strong> The seven piles that make up the
+                main table.
+              </li>
+            </ul>
             <h3>The setup</h3>
             <p>
               The Tableau piles are numbered from 1 to 7, pile 1 has 1 card,

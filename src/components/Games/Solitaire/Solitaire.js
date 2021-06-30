@@ -8,6 +8,7 @@ import {
   moveFromWasteToTableau,
   moveFromTableauToFoundation,
   moveFromWasteToFoundation,
+  moveFromFoundationToTableau,
   isGameEnded,
   popFromStock,
   SUIT_HEARTS,
@@ -28,7 +29,8 @@ import {
   isMovingFromTableauToFoundation,
   isMovingFromWasteToFoundation,
   isMovingFromWasteToTableau,
-  isMovingWithinTableu
+  isMovingWithinTableu,
+  isMovingFromFoundationToTableau
 } from './utils';
 import { cacheImages } from '../../../common/utils';
 import { InvisibleCard } from './Card/Card';
@@ -123,6 +125,16 @@ function Solitaire() {
     if (isMovingFromWasteToFoundation(sourceType, targetType)) {
       const { foundationTarget } = over.data.current;
       newGameState = moveFromWasteToFoundation(currentState, foundationTarget);
+    }
+
+    if (isMovingFromFoundationToTableau(sourceType, targetType)) {
+      const { targetPileIndex } = over.data.current;
+      const { foundationSource } = active.data.current;
+      newGameState = moveFromFoundationToTableau(
+        currentState,
+        foundationSource,
+        targetPileIndex
+      );
     }
 
     updateGameState(newGameState);

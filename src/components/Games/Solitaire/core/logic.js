@@ -211,6 +211,37 @@ function moveFromWasteToFoundation(gameState, foundationTarget) {
   };
 }
 
+function moveFromFoundationToTableau(
+  gameState,
+  foundationSource,
+  targetPileIndex
+) {
+  const { foundations, tableau } = gameState;
+  const foundationSuitName = _.lowerCase(foundationSource);
+  const foundation = foundations[foundationSuitName];
+  const cardOnTop = foundation[0];
+  const targetPile = tableau[targetPileIndex];
+
+  if (!isValidMoveToTableau(cardOnTop, targetPile.up)) {
+    return gameState;
+  }
+
+  const updatedFoundations = _.update(
+    _.clone(foundations),
+    foundationSuitName,
+    current => _.drop(current, 1)
+  );
+
+  const updatedTableu = tableau.slice();
+  updatedTableu[targetPileIndex] = updateTargetPile(targetPile, [cardOnTop]);
+
+  return {
+    ...gameState,
+    foundations: updatedFoundations,
+    tableau: updatedTableu
+  };
+}
+
 function initialGameState() {
   const deck = generateDeck();
   const stock = _.take(deck, 24);
@@ -250,6 +281,7 @@ export {
   moveFromWasteToTableau,
   moveFromTableauToFoundation,
   moveFromWasteToFoundation,
+  moveFromFoundationToTableau,
   popFromStock,
   isGameEnded,
   SUIT_CLUBS,

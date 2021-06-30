@@ -20,9 +20,16 @@ function isMovingFromWasteToFoundation(sourceType, targetType) {
   );
 }
 
+function isMovingFromFoundationToTableau(sourceType, targetType) {
+  return (
+    targetType == TARGET_TYPE.TABLEAU && sourceType == SOURCE_TYPE.FOUNDATION
+  );
+}
+
 export {
   isMovingFromTableauToFoundation,
   isMovingFromWasteToFoundation,
   isMovingFromWasteToTableau,
-  isMovingWithinTableu
+  isMovingWithinTableu,
+  isMovingFromFoundationToTableau
 };

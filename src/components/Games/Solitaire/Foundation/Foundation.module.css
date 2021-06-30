@@ -12,6 +12,13 @@
   opacity: 0.8;
 }
 
+.card {
+  touch-action: none;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+}
+
 @media only screen and (max-width: 560px) {
   .foundation-icon {
     height: 50px;
